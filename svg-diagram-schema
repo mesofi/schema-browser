@@ -1,0 +1,2165 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg id="root" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onload="loadSVG();">
+    <script type="text/ecmascript">
+        var SVG_NS = "http://www.w3.org/2000/svg";
+        var X_LINK_NS = "http://www.w3.org/1999/xlink";
+        var MY_NS = "http://www.att.com/schemas/csi";
+        
+        var CUSTOM_PARENT_ELEMENT_ID = "parent";
+        var CUSTOM_MIN_Y_POSITION = "minYPos";
+        var CUSTOM_MAX_Y_POSITION = "maxYPos";
+        var CUSTOM_MIN_X_POSITION = "minXPos";
+        var CUSTOM_MAX_X_POSITION = "maxXPos";
+        var CUSTOM_OPTIONAL = "optional";
+        var CUSTOM_CARD_TEXT = "cardText";
+        var CUSTOM_DOC = "doc";
+        var CUSTOM_IS_LEAF = "isLeaf";
+        var CUSTOM_REF_TYPE = "refType";
+        
+        var ELEMENT_PATH_CONN_LEFT = "M20,10 H26 L30,5 L26,10 Z";
+        var ELEMENT_PATH_CONN_RIGHT = "M35,5 H40 V10 H35 H40 V15 H35 H40 V10 H45 H40 V5 Z";
+        
+        var ELEMENT_POSTFIX = "_connector";
+        var ELEMENT_POSTFIX_P_VERTICAL = "_parentVerticalConnector";
+        var ELEMENT_POSTFIX_C_VERTICAL = "_childVerticalConnector";
+        var ELEMENT_POSTFIX_TYPE = "_rectType";
+        
+        var HEIGHT_BETWEEN_SIBLINGS = 13;
+        var HEIGHT_BETWEEN_TEXT = 10;
+        var ELEMENT_DEFAULT_WIDTH = 18; // default width for basic element
+        var ELEMENT_DEFAULT_HEIGHT = 21 // default height for basic element
+        var INIT_X = 0; // initial x position for the elements
+        var INIT_Y = 0; // initial y position for the elements
+        var EDGE = 10; // space between the edge and the middle
+        var MAX_WIDTH_COMMENTS = 85; // max text comments
+        
+        var expandibleConnectors = new Object();
+        var lastSelectedGroupElement = null; // the element that was selected
+        var rootElementId = null;
+        
+        function loadSVG() {
+            rootElementId = "parentId";
+            //createGroupElement(rootElementId, null, "root", "1", "0", "1", "null");
+                //createGroupAttributes("day=10,month=01,year=2008", rootElementId);
+                //createGroupElement("AccountSummary", rootElementId, "", null, "0", "1", null);
+                    //createGroupElement("CustomerName", "AccountSummary", "CustomerName", null, "0", "1", null);
+                    //createGroupElement("AuthoUsers", "AccountSummary", "AuthoUsers", null, "0", "1", null);
+                //createGroupElement("AccountDetails", rootElementId, "", "1", "0", "1", null);
+                    //createGroupElement("billingAccountNumber2", "AccountDetails", "billingAccountNumber2", null, "0", "1", null);
+                    //createGroupElement("FANDetails", "AccountDetails", "FANDetails", null, "0", "1", null);
+            
+            createGroupElement(rootElementId, null, "InquireCustomerSnapshot", "1", "1", "unbounded", "null");
+                createGroupElement("AccountSummary", rootElementId, "AccountSummary", "1", "0", "1", "null", "Return in Mode 'S'");
+                    createGroupElement("CustomerName", "AccountSummary", "CustomerName", "1", "0", "unbounded", "null");
+                        createGroupElement("namePrefix", "CustomerName", "namePrefix", null, "0", "1", null, "Name prefix or title (e.g. Dr., Mr., Mrs., etc.)");
+                        createGroupElement("firstName", "CustomerName", "firstName", null, "1", "1", null, "First Name");
+                        createGroupElement("middleName", "CustomerName", "middleName", null, "0", "1", null, "Middle name.");
+                        createGroupElement("lastName", "CustomerName", "lastName", null, "1", "1", null, "Last Name.");
+                        createGroupElement("nameSuffix", "CustomerName", "nameSuffix", null, "0", "1", null, "Name sufix (e.g. Jr. - Junior, Sr. - Senior, etc.)");
+                        createGroupElement("additionalTitle", "CustomerName", "additionalTitle", null, "0", "1", null, "A free text, field that holds the additional title of the name");
+                    createGroupElement("AuthoUsers", "AccountSummary", "AuthoUsers", "1", "0", "unbounded", "null");
+                        createGroupElement("AuthorizedUser1", "AuthoUsers", "AuthorizedUser1", null, "0", "1", null);
+                        createGroupElement("AuthorizedUser2", "AuthoUsers", "AuthorizedUser2", null, "0", "1", null);
+                    createGroupElement("startServiceDate", "AccountSummary", "startServiceDate", null, "0", "1", null);
+                    createGroupElement("otherServices", "AccountSummary", "otherServices", null, "0", "unbounded", null);
+                    createGroupElement("billingAccountNumber", "AccountSummary", "billingAccountNumber", null, "1", "1", null);
+                    createGroupElement("AccountType", "AccountSummary", "AccountType", "1", "0", "1", "null");
+                        createGroupElement("accountType", "AccountType", "accountType", null, "0", "1", null);
+                        createGroupElement("accountSubType", "AccountType", "accountSubType", null, "0", "1", null);
+                        createGroupElement("bussinessType", "AccountType", "bussinessType", null, "0", "1", null);
+                        createGroupElement("openChannel", "AccountType", "openChannel", null, "0", "1", null);
+                        createGroupElement("creditClass", "AccountType", "creditClass", null, "0", "1", null);
+                    createGroupElement("liabilityType", "AccountSummary", "liabilityType", null, "0", "1", null);
+                    createGroupElement("foundationAccountNumber", "AccountSummary", "foundationAccountNumber", null, "0", "1", null);
+                    createGroupElement("olamIndicator", "AccountSummary", "olamIndicator", null, "0", "1", null, "User accesses information online");
+                createGroupElement("AccountDetails", rootElementId, "AccountDetails", "1", "0", "1", "null", "Return in Mode 'D'");
+                    createGroupElement("billingAccountNumber2", "AccountDetails", "billingAccountNumber2", null, "1", "1", null);
+                    createGroupElement("FANDetails", "AccountDetails", "FANDetails", "1", "0", "1", "null");
+                        createGroupElement("foundationAccountNumber2", "FANDetails", "foundationAccountNumber2", null, "1", "1", null);
+                        createGroupElement("fanCompanyName", "FANDetails", "fanCompanyName", null, "0", "1", null);
+                        createGroupElement("fanStatus", "FANDetails", "fanStatus", null, "0", "1", null);
+                        createGroupElement("waiveActivationFee", "FANDetails", "waiveActivationFee", null, "0", "1", null);
+                        createGroupElement("waiveUpgradeFee", "FANDetails", "waiveUpgradeFee", null, "0", "1", null);
+                        createGroupElement("FANServiceDiscount", "FANDetails", "FANServiceDiscount", "2", "0", "1", "null");
+                            createGroupElement("percentDiscount", "FANServiceDiscount", "percentDiscount", null, "1", "1", null);
+                            createGroupElement("amountDiscount", "FANServiceDiscount", "amountDiscount", null, "1", "1", null);
+                        createGroupElement("FANAccesoryDiscount", "FANDetails", "FANAccesoryDiscount", "2", "0", "1", "null");
+                            createGroupElement("percentDiscount2", "FANAccesoryDiscount", "percentDiscount2", null, "1", "1", null);
+                            createGroupElement("amountDiscount2", "FANAccesoryDiscount", "amountDiscount2", null, "1", "1", null);
+                        createGroupElement("enterpriseType", "FANDetails", "enterpriseType", null, "0", "1", null);
+                        createGroupElement("agreementType", "FANDetails", "agreementType", null, "0", "1", null);
+                        createGroupElement("endUserRemitIndicator", "FANDetails", "endUserRemitIndicator", null, "0", "1", null);
+                        createGroupElement("nextOptInIndicator", "FANDetails", "nextOptInIndicator", null, "0", "1", null);
+                        createGroupElement("crossUpgradeIndicator", "FANDetails", "crossUpgradeIndicator", null, "0", "1", null);
+                    createGroupElement("PaymentHistory", "AccountDetails", "PaymentHistory", "1", "0", "unbounded", "null");
+                        createGroupElement("payMethod", "PaymentHistory", "payMethod", null, "0", "1", null);
+                        createGroupElement("originalAmount", "PaymentHistory", "originalAmount", null, "0", "1", null);
+                        createGroupElement("depositDate", "PaymentHistory", "depositDate", null, "0", "1", null);
+                        createGroupElement("statusLastDate", "statusLastDate", "PaymentHistory", null, "0", "1", null);
+        }
+        function createGroupAttributes(attributes, parentId) {
+            var rootSVG = getRoot(); //Get svg element
+            var singleAttributeSVG = createBasicGroupAttribute();
+            rootSVG.appendChild(singleAttributeSVG); // adds the element in the document
+        }
+        /**
+         * This function creates a new element and all its components are drawn on the screen.
+         * @param elementId This is a unique identifier for the new element. Each element much have a valid id.
+         * @param parentId This is the identifier of the parent element.
+         * @param elementText This is the main text that the element will be displaying.
+         * @param connectorType Type of connector, it might be '1' or '2'.
+         * @param minOccurs Min occurs.
+         * @param maxOccurs Max occurs.
+         * @param elementType The element type for the complex elements (not leaf).
+         * @param comments Comments for this element.
+         */
+        function createGroupElement(elementId, parentId, elementText, connectorType, minOccurs, maxOccurs, elementType, comments) {
+            var rootSVG = getRoot(); //Get svg element
+            var isVisibleSVG = (parentId === null ? true : false); // only the parent element is shown on the screen
+            var singleElementSVG = createBasicGroupElement(elementId, isVisibleSVG);
+                
+            rootSVG.appendChild(singleElementSVG); // adds the element in the document
+            
+            // is optional??
+            var optional = isOptional(minOccurs);
+            
+            // sets the text into the element.
+            setText(elementId, elementText);
+            // now determines if the element is optional or mandatory
+            setStrokeDash(elementId, optional);
+            // add the cardinality when it's more than on element
+            addCardinalityMultiple(elementId, maxOccurs);
+            // needs to be invoked at the end
+            addShade(elementId);
+            // add an invalid element when min and max occurs are 0
+            addInvalidElement(elementId, minOccurs, maxOccurs);
+            // add below connector for multiple elements
+            addCardinalityConnector(elementId, maxOccurs);
+            // add addCardinality text based on min and max occurs
+            var cardinalityText = addCardinalityText(elementId, minOccurs, maxOccurs);
+            // adds more custom attributes
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_CARD_TEXT, cardinalityText);
+            // add the comments into the element
+            var documentation = addDocumentation(elementId, comments);
+            // adds more custom attributes
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_DOC, documentation);
+            // add the indicators to determine whether it's a leaf element or not
+            var isLeaf = addLeafIndicator(elementId, connectorType);
+            // adds more custom attributes
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_IS_LEAF, isLeaf);
+            
+            if (connectorType) {
+                // appends the '+' icon to the element
+                setExpandibleConnector(elementId, true, true, connectorType);
+                var singleElementConnectorSVG = createBasicGroupConnector(elementId, connectorType);
+                rootSVG.appendChild(singleElementConnectorSVG);
+                // appends the '-' icon to the element
+                setExpandibleConnector(singleElementConnectorSVG.getAttribute("id"), false, false, connectorType);
+                // stores the id in a map when this has a connector
+                expandibleConnectors[elementId] = false;
+            }
+            
+            // adds more custom attributes
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_PARENT_ELEMENT_ID, parentId);
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_OPTIONAL, optional);
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION, INIT_Y);
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION, calculateHeightGroupElement(elementId));
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_MIN_X_POSITION, INIT_X);
+            singleElementSVG.setAttributeNS(MY_NS, CUSTOM_MAX_X_POSITION, calculateWidthGroupElement(elementId));
+            if (elementType !== null) {
+                singleElementSVG.setAttributeNS(MY_NS, CUSTOM_REF_TYPE, elementType);
+            }
+        }
+        /**
+         * This function tells whether the id passed belongs to an element or a connector.
+         * @param containerElementId Id of the connector or element
+         */
+        function isThisElement(containerElementId) {
+            var pos = containerElementId.indexOf(ELEMENT_POSTFIX);
+            return (pos === -1) ? true : false;
+        }
+        /**
+         * This function determines the connector type (1,2 or 3) of an existing group.
+         * returns a null value when the id provided belongs to an element.
+         * @param containerElementId Id of the connector or element
+         */
+        function getConnectorType(containerElementId) {
+            var isThisAnElement = isThisElement(containerElementId);
+            if (isThisAnElement === true){
+                return null;
+            } else {
+                // it's a connector
+                var parentNode = getE(containerElementId);
+                var childrenSVG = parentNode.childNodes;
+                var connectorSVG = null;
+                
+                var elementFoundSVG = null;
+                var count = 0;
+                for(var i = 0; i &lt; childrenSVG.length; i++) {
+                    if(childrenSVG[i].tagName === "path") {
+                        count ++;
+                        // as per group, the path we need is at 3rd place
+                        if (count == 3) {
+                            connectorSVG = childrenSVG[i];
+                            var value = connectorSVG.getAttribute("d");
+                            if (value === ELEMENT_PATH_CONN_LEFT) {
+                                return "2";
+                            } else {
+                                return "3";
+                            }
+                        }
+                    }
+                 }
+                 return "1";
+            }
+        }
+        /**
+         * This function is invoked when the element is clicked.
+         * @param containerElementId Identifier.
+         * @param isElement Is an element or connector. true, is element, false is connector.
+         * @param select true, it will be selected, false, unselect the current element.
+         */
+        function selectCurrentGroup(containerElementId, isElement, select) {
+            if (lastSelectedGroupElement === null) {
+                lastSelectedGroupElement = containerElementId;
+                if (isElement === true) {
+                    // it's an element
+                    var parentNode = getE(containerElementId);
+                    var childrenSVG = parentNode.childNodes;
+                    
+                    var elementFoundSVG = null;
+                    var classElement = null;
+                    for(var i = 0; i &lt; childrenSVG.length; i++) {
+                        if (childrenSVG[i].tagName === "rect") {
+                            elementFoundSVG = childrenSVG[i];
+                            classElement = elementFoundSVG.getAttribute("class");
+                            if (classElement !== "shade") {
+                                if (select === true) {
+                                    elementFoundSVG.setAttributeNS(null, "class", "button-pressed");
+                                } else {
+                                    elementFoundSVG.setAttributeNS(null, "class", "button");
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    var connectorType = getConnectorType(containerElementId);
+                    // it's a connector
+                    if (connectorType === "1") {
+                        // it's a sequence
+                        var connectorSVG = findElementInGroup(containerElementId, "path", false);
+                    } else if (connectorType === "2" || connectorType === "3") {
+                        // it's a choice or all
+                        var parentNode = getE(containerElementId);
+                        var childrenSVG = parentNode.childNodes;
+                        var connectorSVG = null;
+                        
+                        var elementFoundSVG = null;
+                        var count = 0;
+                        for(var i = 0; i &lt; childrenSVG.length; i++) {
+                            if(childrenSVG[i].tagName === "path") {
+                                count ++;
+                                // as per group, the path we need is at 2nd place
+                                if (count == 2) {
+                                    connectorSVG = childrenSVG[i];
+                                    break;
+                                }
+                            }
+                         }
+                     }
+                     if (select === true) {
+                         connectorSVG.setAttributeNS(null, "class", "button-pressed");
+                     } else {
+                         connectorSVG.setAttributeNS(null, "class", "button");
+                     }
+                }
+            } else {
+                var tmpLastSelectedGroupElement = lastSelectedGroupElement;
+                lastSelectedGroupElement = null;
+                // recursive call
+                var isElmtLastSelected = isThisElement(tmpLastSelectedGroupElement);
+                // unselect the prev one
+                selectCurrentGroup(tmpLastSelectedGroupElement, isElmtLastSelected, false); 
+                // recursive call
+                lastSelectedGroupElement = null;
+                selectCurrentGroup(containerElementId, isElement, true); // select the curr one
+            }
+        }
+        /**
+         * This function is invoked when the expandible box associated to the connector is clicked.
+         */
+        function showHideChildrenConnector(containerElementId) {
+            // not implemented yet
+        }
+        /**
+         * This function is invoked when the expandible box associated to the element is clicked.
+         */
+        function showHideChildrenElement(containerElementId) {
+             var plusConnector = toggleExpandible(containerElementId);
+             
+             var connectorId = containerElementId + ELEMENT_POSTFIX;
+             var connectorSVG = getE(connectorId);
+             var childrenSVG = getChildren(containerElementId);
+             
+             // the following condition determines whether the element is expanded or not
+             if (plusConnector) { 
+                 // the elements will be contracted along with all its descendants
+                 var isLast = clickedLastElement(containerElementId);
+                 if (isLast) {
+                     // contract the last children
+                     contractElements(containerElementId, true);    
+                 } else {
+                     // saves the current state
+                     var tmpConnectors = new Object(); // will hold the current values
+                     copyElements(expandibleConnectors, tmpConnectors);
+                     
+                     // a higher element was clicked and will be contracted
+                     toggleExpandible(containerElementId); // reverts the original state
+                     contractHigherLevelElementsFrom(containerElementId);
+                     
+                     // override the current state with the one previously saved
+                     copyElements(tmpConnectors, expandibleConnectors);
+                     return;
+                 }
+                 
+                 // updates the expandible connector
+                 expandibleConnectors[containerElementId] = false;
+             } else {
+                 // the elements will be expanded along with all its descendants
+                 var expandChildren = expandibleConnectors[containerElementId];
+                 if (expandChildren) {
+                     toggleExpandible(containerElementId); // reverts the original state
+                     expandHigherLevelElementsFrom(containerElementId); // starts expanding automatically
+                     return;
+                 } else {
+                     // the element clicked will be expanded
+                     connectorSVG.setAttributeNS(null, "display", ""); // shows the element
+                     for(var i = 0; i &lt; childrenSVG.length; i++) {
+                         childrenSVG[i].setAttributeNS(null, "display", "");
+                     }
+                 
+                     // reorders the elements and make them visible to accomodate
+                     expandAndReorderChildElements(containerElementId, connectorId); // order the children
+                     reorderParentElements(containerElementId, connectorId); // order the parent
+                     
+                     // finally we connect the children
+                     // join the elements and rejoin the existing ones.
+                     joinChildAndParentElements(containerElementId, true);
+                     // shows a rectangle to indicate the actual type of the element if exists
+                     showTypeRefIndicator(containerElementId, true);
+                     
+                     // updates the expandible connector
+                     expandibleConnectors[containerElementId] = true;
+                 }
+             }
+             // rejoin the existing ones.
+             joinChildAndParentElements(containerElementId, false);
+             
+             var visitedElements = new Object();
+             // reorder and make sure min and max positions in elements are ok for the tree 
+             updateAllTreeMaxMinAttibutes(rootElementId, visitedElements);
+             
+             // adjust a rectangle to indicate the actual type of the element if exists
+             showTypeRefIndicator(containerElementId, false);
+        }
+        function clickedLastElement(containerElementId) {
+            var currentElementSVG = null;
+            var childrenSVG = getChildren(containerElementId);
+            var totalChildren = childrenSVG.length;
+            
+            for(var i = 0; i &lt; totalChildren; i++) {
+                currentElementSVG = childrenSVG[i];
+                if (isExpanded(currentElementSVG)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        function updateAllTreeMaxMinAttibutes(containerElementId, visitedElements) {
+            var childrenSVG = getChildren(containerElementId);
+            var currentElementSVG = null;
+            var currId = null;
+            
+            for(var i = 0; i &lt; childrenSVG.length; i++) {
+                currentElementSVG = childrenSVG[i];
+                currId = currentElementSVG.getAttribute("id");
+                if (isExpanded(currentElementSVG)) {
+                    updateAllTreeMaxMinAttibutes(currId, visitedElements); // recursive call
+                } else {
+                    updateAllParentMaxMinAttibutes(currId, visitedElements);
+                }
+            }
+        }
+        function updateAllParentMaxMinAttibutes(containerElementId, visitedElements) {
+            // updates the visited elements
+            visitedElements[containerElementId] = true;
+            // starts updating the parent element
+            var myParentSVG = getParent(containerElementId);
+            if (myParentSVG) {
+                var myParentId = myParentSVG.getAttribute("id");
+                if (!visitedElements[myParentId] === true) {
+                    var yMinPos = Number(getAttributeValue(containerElementId, CUSTOM_MIN_Y_POSITION));
+                    var yMaxPos = Number(getAttributeValue(containerElementId, CUSTOM_MAX_Y_POSITION));
+                    
+                    var yParentMinPos = Number(getAttributeValue(myParentId, CUSTOM_MIN_Y_POSITION));
+                    var yParentMaxPos = Number(getAttributeValue(myParentId, CUSTOM_MAX_Y_POSITION));
+                    
+                    if (yMinPos &lt; yParentMinPos) {
+                        myParentSVG.setAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION, yMinPos);
+                    }
+                    updateAllParentMaxMinAttibutes(myParentId, visitedElements); // recursive call
+                }
+            }
+        }
+        function getNextNextSiblings(containerElementId) {
+            var siblingsSVG = [];
+            
+            var allSiblingsSVG = getSiblings(containerElementId);
+            var totalSiblings = allSiblingsSVG.length;
+            var currentSibling = null;
+            
+            if (totalSiblings >= 2) {
+                var siblingId = null;
+                var found = false;
+                
+                for(var i = 0; i &lt; totalSiblings; i++) {
+                    currentSibling = allSiblingsSVG[i];
+                    siblingId = currentSibling.getAttribute("id");
+                    if (siblingId === containerElementId) {
+                        found = true;
+                        continue;
+                    } else if (found) {
+                        siblingsSVG.push(allSiblingsSVG[i]);
+                    }
+                }
+            }
+            return siblingsSVG;
+        }
+        function updateParentMaxMinAttibutes(containerElementId) {
+            // calculates de 'y' positions
+            updateParentYMaxMinAttibutes(containerElementId);
+            // calculates de 'x' positions
+            updateParentXMaxMinAttibutes(containerElementId);
+        }
+        function updateParentXMaxMinAttibutes(containerElementId) {
+            var elementSVG = getE(containerElementId);
+            if (isExpanded(elementSVG)) {
+                // when the element is expanded
+                
+                // Calculates the min X
+                // finds the corresponding connector for this element to place the new element
+                var idConnector = containerElementId + ELEMENT_POSTFIX;
+                var connectorElementSVG = getE(idConnector);
+                var innerLineSVG = findElementInGroup(idConnector, "line", true);
+                var lineDistance = Number(innerLineSVG.getAttribute("x2")) - Number(innerLineSVG.getAttribute("x1"));
+                
+                var rightDistance = 6;
+                var leftDistance = lineDistance - rightDistance;
+                
+                var xPos = getTransformX(connectorElementSVG);
+                // now calculates the min X
+                var minX = xPos + leftDistance;
+                
+                // now calculates the max X
+                var childrenSVG = getChildren(containerElementId);
+                var childSVG = null;
+                var maxWidthChild = 0;
+                for(var i = 0; i &lt; childrenSVG.length; i++) {
+                    childSVG = childrenSVG[i];
+                    if (childSVG.getBBox().width &gt; maxWidthChild) {
+                        // determines which child has the greatest width
+                        maxWidthChild = childSVG.getBBox().width;
+                    }
+                }
+                // calculates the width of the connector
+                var widthConn = calculateWidthGroupConnector(containerElementId + ELEMENT_POSTFIX);
+                widthConn -= lineDistance;
+                
+                var maxX = 0;
+                maxX += minX;
+                maxX += rightDistance;
+                maxX += widthConn;
+                maxX += maxWidthChild;
+                
+                // once we have the maxX, we need to check make sure if one of the children a greater than this
+                for(var i = 0; i &lt; childrenSVG.length; i++) {
+                    childSVG = childrenSVG[i];
+                    // just make sure all the elements has the maxX
+                    if (Number(childSVG.getAttributeNS(MY_NS, CUSTOM_MAX_X_POSITION)) &gt; maxX) {
+                        maxX = Number(childSVG.getAttributeNS(MY_NS, CUSTOM_MAX_X_POSITION));
+                    }
+                }
+                
+                // updates the custom attributes.
+                elementSVG.setAttributeNS(MY_NS, CUSTOM_MIN_X_POSITION, minX);
+                elementSVG.setAttributeNS(MY_NS, CUSTOM_MAX_X_POSITION, maxX);
+            } else {
+                // when the element is not expanded.
+                var xPos = getTransformX(elementSVG);
+                var width = elementSVG.getBBox().width;
+                
+                // updates the custom attributes.
+                elementSVG.setAttributeNS(MY_NS, CUSTOM_MIN_X_POSITION, xPos);
+                elementSVG.setAttributeNS(MY_NS, CUSTOM_MAX_X_POSITION, xPos + width);
+            }
+        }
+        function updateParentYMaxMinAttibutes(containerElementId) {
+            var elementSVG = getE(containerElementId);
+            if (isExpanded(elementSVG)) {
+                // when the element is expanded
+                
+                // gets the children for the current element
+                var childrenSVG = getChildren(containerElementId);
+                var totalChildren = childrenSVG.length;
+                
+                var init = 0;
+                var last = 0;
+                var calculateLastPos = true;
+                
+                if (totalChildren !== 0) {
+                    // calculates based on the first child and last child
+                    var firstChildSVG = null;
+                    var lastChildSVG = null;
+                    
+                    firstChildSVG = childrenSVG[0];
+                    lastChildSVG = childrenSVG[totalChildren - 1];
+                    
+                    init = getGlobalPosition(firstChildSVG).y;
+                    last = getGlobalPosition(lastChildSVG).y;
+                    last += lastChildSVG.getBBox().height;
+                    
+                    // just make sure all the elements has the maxY
+                    if (Number(lastChildSVG.getAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION)) &gt; last) {
+                        last = Number(lastChildSVG.getAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION));
+                    }
+                    
+                    // =====  special case when parent is greater than child
+                    var parentHeight = elementSVG.getBBox().height;
+                    var childMaxHeight = last - init;
+                    if (parentHeight &gt; childMaxHeight) {
+                        calculateLastPos = true;
+                        last = parentHeight;
+                    }
+                    // =====  special case when parent is greater than child
+                } else {
+                    // no children found, calculates by itself
+                    init = getGlobalPosition(elementSVG).y;
+                    last = init;
+                    last += elementSVG.getBBox().height;
+                }
+                // updates the custom attributes.
+                elementSVG.setAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION, init);
+                if (calculateLastPos) {
+                    elementSVG.setAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION, last);
+                }
+            } else {
+                // when the element is not expanded.
+                var yPos = getTransformY(elementSVG);
+                var height = elementSVG.getBBox().height;
+                
+                // updates the custom attributes.
+                elementSVG.setAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION, yPos);
+                elementSVG.setAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION, yPos + height);
+            }
+        }
+        /**
+         * This function creates a rec for the complext type for the children and parents element if are needed.
+         */
+        function showTypeRefIndicator(containerElementId, showRectIndicator) {
+            var childrenSVG = null;
+            var myParentId = null;
+            
+            if (showRectIndicator) {
+                
+            }
+            if (!showRectIndicator) {
+                var myParentSVG = getParent(containerElementId);
+                if (myParentSVG) {
+                    myParentId = myParentSVG.getAttribute("id");
+                } else {
+                    return;
+                }
+            }
+            
+            if (showRectIndicator) {
+                var domElementSVG = getE(containerElementId);
+                var typeRefDescription = domElementSVG.getAttributeNS(MY_NS, CUSTOM_REF_TYPE);
+                if (typeRefDescription !== null) {
+                    // gets the max and min 'x' and 'y' of the current element
+                    var yMinPos = Number(domElementSVG.getAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION));
+                    var yMaxPos = Number(domElementSVG.getAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION));
+                    var xMinPos = Number(domElementSVG.getAttributeNS(MY_NS, CUSTOM_MIN_X_POSITION));
+                    var xMaxPos = Number(domElementSVG.getAttributeNS(MY_NS, CUSTOM_MAX_X_POSITION));
+                    
+                    var xPosRec = xMinPos;
+                    var yPosRec = yMinPos;
+                    var widthRec = xMaxPos - xMinPos;
+                    var heightRec = yMaxPos - yMinPos;
+                    
+                    var gSGV = document.createElementNS(SVG_NS, "g"); // creates a new "group"
+                    gSGV.setAttributeNS(null, "id", containerElementId + ELEMENT_POSTFIX_TYPE);
+                    gSGV.setAttributeNS(null, "transform", "translate(" + xPosRec + "," + yPosRec + ")");
+                    
+                    var rectSGV = document.createElementNS(SVG_NS, "rect"); // creates a new "rect"
+                    rectSGV.setAttributeNS(null, "x", "0");
+                    rectSGV.setAttributeNS(null, "y", "0");
+                    rectSGV.setAttributeNS(null, "width", widthRec);
+                    rectSGV.setAttributeNS(null, "height", heightRec);
+                    rectSGV.setAttributeNS(null, "class", "complex-type");
+                    rectSGV.setAttributeNS(null, "stroke-dasharray", "18,6");
+                    
+                    gSGV.appendChild(rectSGV);
+                    var root = getRoot(); //Get svg element
+                    var firstGroupSVG = getE(rootElementId);
+                    if (typeof firstGroupSVG != 'undefined') {
+                        root.insertBefore(gSGV, firstGroupSVG); //adds to the document    
+                    }
+                }
+            } else {
+                // reacomodate the elements based on the children
+                var rectIndicatorParentId = myParentId + ELEMENT_POSTFIX_TYPE;
+                var rectIndicatorParentSVG = getE(rectIndicatorParentId);
+                
+                if (rectIndicatorParentSVG) {
+                    var parentElementSVG = getE(myParentId);
+                    // gets the max and min 'x' and 'y' of the current element
+                    var yMinPos = Number(parentElementSVG.getAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION));
+                    var yMaxPos = Number(parentElementSVG.getAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION));
+                    var xMinPos = Number(parentElementSVG.getAttributeNS(MY_NS, CUSTOM_MIN_X_POSITION));
+                    var xMaxPos = Number(parentElementSVG.getAttributeNS(MY_NS, CUSTOM_MAX_X_POSITION));
+                    
+                    var widthRec = xMaxPos - xMinPos;
+                    var heightRec = yMaxPos - yMinPos;
+                    
+                    var innerRect = findElementInGroup(rectIndicatorParentId, "rect", true);
+                    innerRect.setAttributeNS(null, "width", widthRec);
+                    innerRect.setAttributeNS(null, "height", heightRec);
+                }
+                
+                // recursive call
+                showTypeRefIndicator(getParent(containerElementId).getAttribute("id"), showRectIndicator);
+            }
+        }
+        /**
+         * This function creates a vertical line to join the children and parents element if are needed.
+         */
+        function joinChildAndParentElements(containerElementId, joinChildren) {
+            var childrenSVG = null;
+            var myParentId = null;
+            
+            if (joinChildren) {
+                childrenSVG = getChildren(containerElementId);
+            }
+            if (!joinChildren) {
+                var myParentSVG = getParent(containerElementId);
+                if (myParentSVG) {
+                    myParentId = myParentSVG.getAttribute("id");
+                    childrenSVG = getChildren(myParentId);
+                } else {
+                    return;
+                }
+            }
+            var totalChildren = childrenSVG.length;
+            if (totalChildren => 2) {
+                
+                // only more than 2 siblings can join together.
+                var firstChildSVG = childrenSVG[0];
+                var lastChildSVG = childrenSVG[totalChildren - 1];
+                
+                var firstLineSVG = findElementInGroup(firstChildSVG.getAttribute("id"), "line");
+                var lastLineSVG = findElementInGroup(lastChildSVG.getAttribute("id"), "line");
+                
+                var init = getGlobalPosition(firstLineSVG).y;
+                var last = getGlobalPosition(lastLineSVG).y;
+                
+                init += EDGE;
+                last += EDGE;
+                
+                if (joinChildren) {
+                    var xPos = getTransformX(firstChildSVG);
+                    var yPos = getTransformY(firstChildSVG);
+                    
+                    var root = getRoot(); //Get svg element
+                    
+                    // first creates a line to join all the children
+                    var lineSGV = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+                    lineSGV.setAttributeNS(null, "x1", xPos);
+                    lineSGV.setAttributeNS(null, "y1", init);
+                    lineSGV.setAttributeNS(null, "x2", xPos);
+                    lineSGV.setAttributeNS(null, "y2", last);
+                    lineSGV.setAttribute("stroke-dasharray", "3,3");
+                    lineSGV.setAttribute("id", containerElementId + ELEMENT_POSTFIX_P_VERTICAL);
+                    root.appendChild(lineSGV); //adds to the document
+                    
+                    // now, for every mandatory element, creates a solid line to join the children
+                    var childId = null;
+                    var childSVG = null;
+                    // gets the position of the connector
+                    var yPosC = getTransformY(containerElementId + ELEMENT_POSTFIX);
+                    yPosC += EDGE;
+                    var end = yPosC;
+                    
+                    for(var i = 0; i &lt; totalChildren; i++) {
+                        childSVG = childrenSVG[i];
+                        childId = childSVG.getAttribute("id");
+                        
+                        if (childSVG.getAttributeNS(MY_NS, CUSTOM_OPTIONAL) === "false") {
+                            var lineSVG = findElementInGroup(childId, "line");
+                            var start = getGlobalPosition(lineSVG).y;
+                            start += EDGE;
+                            
+                            var lineCSGV = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+                            lineCSGV.setAttributeNS(null, "x1", xPos);
+                            lineCSGV.setAttributeNS(null, "y1", start);
+                            lineCSGV.setAttributeNS(null, "x2", xPos);
+                            lineCSGV.setAttributeNS(null, "y2", end);
+                            lineCSGV.setAttribute("id", childId + ELEMENT_POSTFIX_C_VERTICAL);
+                            root.appendChild(lineCSGV); //adds to the document
+                        }
+                    }
+                } else {
+                    // reacomodate the elements based on the children
+                    var connectorVerticalParentId = myParentId + ELEMENT_POSTFIX_P_VERTICAL;
+                    var connectorVerticalParentSVG = getE(connectorVerticalParentId);
+                    
+                    connectorVerticalParentSVG.setAttributeNS(null, "y1", init);
+                    connectorVerticalParentSVG.setAttributeNS(null, "y2", last);
+                    
+                    // now, for every mandatory element, reacomodates the solid lines to join the children
+                    var childId = null;
+                    var childSVG = null;
+                    // gets the position of the connector
+                    var yPosC = getTransformY(myParentId + ELEMENT_POSTFIX);
+                    yPosC += EDGE;
+                    var end = yPosC;
+                    
+                    for(var i = 0; i &lt; totalChildren; i++) {
+                        childSVG = childrenSVG[i];
+                        childId = childSVG.getAttribute("id");
+                        
+                        if (childSVG.getAttributeNS(MY_NS, CUSTOM_OPTIONAL) === "false") {
+                            var lineSVG = findElementInGroup(childId, "line");
+                            var start = getGlobalPosition(lineSVG).y;
+                            start += EDGE;
+                            
+                            var connectorVerticalChildId = childId + ELEMENT_POSTFIX_C_VERTICAL;
+                            var connectorVerticalChildSVG = getE(connectorVerticalChildId);
+                            
+                            connectorVerticalChildSVG.setAttributeNS(null, "y1", start);
+                            connectorVerticalChildSVG.setAttributeNS(null, "y2", end);
+                        }
+                    }
+                    
+                    // recursive call
+                    joinChildAndParentElements(getParent(containerElementId).getAttribute("id"), joinChildren);
+                    showTypeRefIndicator(getParent(containerElementId).getAttribute("id"), joinChildren);
+                }
+            }
+        }
+        function reorderParentElements(containerElementId, connectorId) {
+            var parentSVG = getE(containerElementId);
+            var parentConnSVG = getE(connectorId);
+            
+            var childrenSVG = getChildren(containerElementId);
+            var totalChildren = childrenSVG.length;
+            
+            var xPos = 0;
+            var yPos = 0;
+            
+            // finds the middle point among children
+            if (totalChildren % 2 === 0 ) {
+                var firstChildSVG = childrenSVG[0];
+                var lastChildSVG = childrenSVG[totalChildren - 1];
+                
+                var firstLineSVG = findElementInGroup(firstChildSVG.getAttribute("id"), "line", true);
+                var lastLineSVG = findElementInGroup(lastChildSVG.getAttribute("id"), "line", true);
+                
+                var init = getGlobalPosition(firstLineSVG).y;
+                var last = getGlobalPosition(lastLineSVG).y;
+                var middlePoint = (last - init) / 2;
+                yPos = init + middlePoint;
+            } else {
+                var middleChildPos = parseInt(totalChildren / 2);
+                var middleChildSVG = childrenSVG[middleChildPos];
+                
+                var lineSVG = findElementInGroup(middleChildSVG.getAttribute("id"), "line", true);
+                yPos = getGlobalPosition(lineSVG).y;
+            }
+            // moves the x, y position for the parent element
+            xPos = getTransformX(parentSVG);
+            moveGroup(containerElementId, xPos, yPos);
+            
+            xPos = getTransformX(parentConnSVG);
+            moveGroup(connectorId, xPos, yPos);
+            
+            updateParentMaxMinAttibutes(containerElementId); // updates the position
+            
+            // gets the max position of parent
+            var parentMaxYPos = Number(parentSVG.getAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION));
+            var parentMaxHeight = parentSVG.getBBox().height + Number(getTransformY(parentSVG));
+            
+            // makes sure it takes the max
+            if (parentMaxHeight &gt; parentMaxYPos) {
+                parentMaxYPos = parentMaxHeight
+            }
+            
+            var parentMinYPos = 0;
+            var yPosDistance = 0;
+            
+            // now visits every sibling along with descendants to adjust the new position.
+            var nextSiblings = getNextNextSiblings(containerElementId);
+            var currentSVG = null;
+            var firstSiblingCalculation = false;
+            
+            for(var i = 0; i &lt; nextSiblings.length; i++) {
+                currentSVG = nextSiblings[i];
+                if (firstSiblingCalculation === false) {
+                    parentMinYPos = getTransformY(currentSVG); // min pos of initial children's sibling
+                    yPosDistance = parentMaxYPos - parentMinYPos; // gets the distance
+                    
+                    // calculates the second distance. REVIEW THIS CODE LATER
+                    yPosDistance = yPosDistance + (parentMinYPos - Number(currentSVG.getAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION)));
+                }
+                expandAllOtherElements(currentSVG, yPosDistance);
+                firstSiblingCalculation = true;
+            }
+            
+            var myParentSVG = getParent(containerElementId);
+            if (myParentSVG) {
+                var currentId = myParentSVG.getAttribute("id");
+                var currentIdConnector = currentId + ELEMENT_POSTFIX;
+                // recursive call
+                reorderParentElements(currentId, currentIdConnector);
+            }
+        }
+        function expandAllOtherElements(currentSVG, yPosDistance) {
+            var currentId = currentSVG.getAttribute("id");
+            var currentIdConnector = currentId + ELEMENT_POSTFIX;
+            var currentRefIndicator = currentId + ELEMENT_POSTFIX_TYPE;
+            var currentConnectorSVG = getE(currentIdConnector); // gets id of connector
+            var currentRefIndicatorSVG = getE(currentRefIndicator); // gets id of ref type
+            
+            var xPos = getTransformX(currentSVG);
+            var yPos = getTransformY(currentSVG);
+            yPos = yPos + yPosDistance + HEIGHT_BETWEEN_SIBLINGS;
+            
+            moveGroup(currentId, xPos, yPos); // moves the parent element
+            updateParentMaxMinAttibutes(currentId); // updates the position
+            
+            // now tries to move a posible connector if exists
+            if (currentConnectorSVG) {
+                xPos = getTransformX(currentConnectorSVG);
+                yPos = getTransformY(currentConnectorSVG);
+            
+                yPos = yPos + yPosDistance + HEIGHT_BETWEEN_SIBLINGS;
+                moveGroup(currentIdConnector, xPos, yPos); // moves the connector element
+                
+                // now tries to move the vertical connector
+                var connectorVerticalId = currentId + ELEMENT_POSTFIX_P_VERTICAL;
+                var connectorVerticalSVG = getE(connectorVerticalId); // gets id connector vertical
+                if (connectorVerticalSVG) {
+                    var y1 = parseInt(connectorVerticalSVG.getAttribute("y1"));
+                    var y2 = parseInt(connectorVerticalSVG.getAttribute("y2"));
+                    
+                    y1 = y1 + yPosDistance;
+                    y2 = y2 + yPosDistance;
+                    
+                    y1 = y1 + EDGE + 3;
+                    y2 = y2 + EDGE + 3;
+                    
+                    connectorVerticalSVG.setAttributeNS(null, "y1", y1);
+                    connectorVerticalSVG.setAttributeNS(null, "y2", y2);
+                    //+++++++
+                    // now, for every mandatory element, reacomodate a solid line to join the children
+                    var childId = null;
+                    var childSVG = null;
+                    var childrenSVG = getChildren(currentId);
+                    for(var i = 0; i &lt; childrenSVG.length; i++) {
+                        childSVG = childrenSVG[i];
+                        childId = childSVG.getAttribute("id");
+                        
+                        if (childSVG.getAttributeNS(MY_NS, CUSTOM_OPTIONAL) === "false") {
+                            var connectorVerticalChildId = childId + ELEMENT_POSTFIX_C_VERTICAL;
+                            var connectorVerticalChildSVG = getE(connectorVerticalChildId);
+                            
+                            var y11 = parseInt(connectorVerticalChildSVG.getAttribute("y1"));
+                            var y22 = parseInt(connectorVerticalChildSVG.getAttribute("y2"));
+                            
+                            y11 = y11 + yPosDistance;
+                            y22 = y22 + yPosDistance;
+                            
+                            y11 = y11 + EDGE + 3;
+                            y22 = y22 + EDGE + 3;
+                            
+                            connectorVerticalChildSVG.setAttributeNS(null, "y1", y11);
+                            connectorVerticalChildSVG.setAttributeNS(null, "y2", y22);
+                        }
+                    }
+                    //+++++++
+                }
+            }
+            // now tries to move a possible rect with the type indicator
+            if (currentRefIndicatorSVG) {
+                var y = getTransformY(currentRefIndicatorSVG);
+                y = y + yPosDistance + HEIGHT_BETWEEN_SIBLINGS;
+                moveGroup(currentRefIndicator, null, y);
+            }
+            if (isExpanded(currentSVG)) {
+                var childrenSVG = getChildren(currentId);
+                for(var i = 0; i &lt; childrenSVG.length; i++) {
+                    // recursive call
+                    expandAllOtherElements(childrenSVG[i], yPosDistance);
+                }
+            }
+            // recalculate the position for the current element
+            updateParentMaxMinAttibutes(currentId); // updates the position
+        }
+        function contractElements(containerElementId, isElementExpanded) {
+            var connectorId = containerElementId + ELEMENT_POSTFIX;
+            var connectorSVG = getE(connectorId);
+            
+            var connectorVerticalId = containerElementId + ELEMENT_POSTFIX_P_VERTICAL;
+            var connectorVerticalSVG = getE(connectorVerticalId);
+            var rectRefId = containerElementId + ELEMENT_POSTFIX_TYPE;
+            var rectRefSVG = getE(rectRefId);
+            
+            if (connectorVerticalSVG) {
+                getRoot().removeChild(connectorVerticalSVG); // removes the element
+            }
+            if (rectRefSVG) {
+                getRoot().removeChild(rectRefSVG); // removes the rect type
+            }
+            
+            // now removes the child connectors
+            var childrenConnSVG = getChildren(containerElementId);
+            for(var i = 0; i &lt; childrenConnSVG.length; i++) {
+                if (childrenConnSVG[i].getAttributeNS(MY_NS, CUSTOM_OPTIONAL) === "false") {
+                    
+                    var connVerticalChildId = childrenConnSVG[i].getAttribute("id") + ELEMENT_POSTFIX_C_VERTICAL;
+                    var connVerticalChildSVG = getE(connVerticalChildId);
+                    
+                    if (connVerticalChildSVG) {
+                        getRoot().removeChild(connVerticalChildSVG); // removes the element
+                    }
+                }
+            }
+            
+            // the current element is expanded?
+            if (isElementExpanded) {
+                if (connectorSVG) {
+                    moveGroup(connectorSVG, INIT_X, INIT_Y);
+                    connectorSVG.setAttributeNS(null, "display", "none"); // hides the element
+                }
+                // starts moving the children based on parent position and order of siblings when it's expanded
+                var childrenSVG = getChildren(containerElementId);
+                var totalChildren = childrenSVG.length;
+                var currId = 0;
+                
+                for(var i = 0; i &lt; totalChildren; i++) {
+                    currId = childrenSVG[i].getAttribute("id");
+                    contractElements(currId, isExpanded(childrenSVG[i]));  // recursive call
+                    
+                    moveGroup(childrenSVG[i], INIT_X, INIT_Y);
+                    toggleExpandible(currId, true); // changes the icon
+                    updateParentMaxMinAttibutes(currId); // updates the position
+                    childrenSVG[i].setAttributeNS(null, "display", "none"); // hides the element
+                }
+                // reorder and make sure min and max positions in elements are ok for the tree 
+                updateAllTreeMaxMinAttibutes(rootElementId, new Object());
+                
+                // reacomodate the current element.
+                var yPos = getAttributeValue(containerElementId, CUSTOM_MIN_Y_POSITION);
+                moveGroup(containerElementId, null, yPos);
+                updateParentMaxMinAttibutes(containerElementId); // updates the position
+                
+                // second phase in the processing...
+                
+                // gets the max position of parent
+                var parentMaxYPos = Number(getAttributeValue(containerElementId, CUSTOM_MAX_Y_POSITION));
+                var parentMinYPos = 0;
+                var yPosDistance = 0;
+                
+                // now visits every sibling along with descendants to adjust the new position.
+                var nextSiblings = getNextNextSiblings(containerElementId);
+                var currentSVG = null;
+                var firstSiblingCalculation = false;
+                
+                for(var i = 0; i &lt; nextSiblings.length; i++) {
+                    currentSVG = nextSiblings[i];
+                    if (firstSiblingCalculation === false) {
+                        // gets the distance
+                        yPosDistance = Number(currentSVG.getAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION)) - parentMaxYPos;
+                    }
+                    contractAllOtherElements(currentSVG, yPosDistance);
+                    firstSiblingCalculation = true;
+                }
+                var myParentSVG = getParent(containerElementId);
+                if (myParentSVG) {
+                    var currentId = myParentSVG.getAttribute("id");
+                    var currentIdConnector = currentId + ELEMENT_POSTFIX;
+                    // recursive call
+                    reorderParentElements(currentId, currentIdConnector);
+                }
+            }
+        }
+        function expandHigherLevelElementsFrom(containerElementId) {
+            if (expandibleConnectors[containerElementId]) {
+                // simulates that this element has not being clicked.
+                expandibleConnectors[containerElementId] = false;
+                // expands the parent element
+                showHideChildrenElement(containerElementId);
+            }
+            
+            var currentElementSVG = null;
+            var childrenSVG = getChildren(containerElementId);
+            var totalChildren = childrenSVG.length;
+            var currId = null;
+            
+            for(var i = 0; i &lt; totalChildren; i++) {
+                currentElementSVG = childrenSVG[i];
+                currId = currentElementSVG.getAttribute("id");
+                if (expandibleConnectors[currId]) {
+                    // recursive call to the main function
+                    showHideChildrenElement(currId);
+                }
+            }
+        }
+        function contractHigherLevelElementsFrom(containerElementId) {
+            var currentElementSVG = null;
+            var childrenSVG = getChildren(containerElementId);
+            var totalChildren = childrenSVG.length;
+            var currId = null;
+            
+            for(var i = 0; i &lt; totalChildren; i++) {
+                currentElementSVG = childrenSVG[i];
+                currId = currentElementSVG.getAttribute("id");
+                if (isExpanded(currentElementSVG)) {
+                    // recursive call to the main function
+                    showHideChildrenElement(currId);
+                }
+            }
+            showHideChildrenElement(containerElementId); // recursive call to the main function
+        }
+        function contractAllOtherElements(currentSVG, yPosDistance) {
+            var currentId = currentSVG.getAttribute("id");
+            var currentIdConnector = currentId + ELEMENT_POSTFIX;
+            var currentRefIndicator = currentId + ELEMENT_POSTFIX_TYPE;
+            var currentConnectorSVG = getE(currentIdConnector); // gets id of connector
+            var currentRefIndicatorSVG = getE(currentRefIndicator); // gets id of ref type
+            
+            var yPos = getTransformY(currentSVG);
+            yPos = yPos - yPosDistance + HEIGHT_BETWEEN_SIBLINGS;
+            
+            moveGroup(currentId, null, yPos); // moves the parent element
+            updateParentMaxMinAttibutes(currentId); // updates the position
+            
+            // now tries to move a posible connector if exists
+            if (currentConnectorSVG) {
+                yPos = getTransformY(currentConnectorSVG);
+            
+                yPos = yPos - yPosDistance + HEIGHT_BETWEEN_SIBLINGS;
+                moveGroup(currentIdConnector, null, yPos); // moves the connector element
+
+                // now tries to move the vertical connector
+                var connectorVerticalId = currentId + ELEMENT_POSTFIX_P_VERTICAL;
+                var connectorVerticalSVG = getE(connectorVerticalId); // gets id connector vertical
+                if (connectorVerticalSVG) {
+                    var y1 = parseInt(connectorVerticalSVG.getAttribute("y1"));
+                    var y2 = parseInt(connectorVerticalSVG.getAttribute("y2"));
+                    
+                    y1 = y1 - yPosDistance;
+                    y2 = y2 - yPosDistance;
+                    
+                    y1 = y1 + EDGE + 3;
+                    y2 = y2 + EDGE + 3;
+                    
+                    connectorVerticalSVG.setAttributeNS(null, "y1", y1);
+                    connectorVerticalSVG.setAttributeNS(null, "y2", y2);
+                    
+                    //-------
+                    // now, for every mandatory element, reacomodate a solid line to join the children
+                    var childId = null;
+                    var childSVG = null;
+                    var childrenSVG = getChildren(currentId);
+                    for(var i = 0; i &lt; childrenSVG.length; i++) {
+                        childSVG = childrenSVG[i];
+                        childId = childSVG.getAttribute("id");
+                        
+                        if (childSVG.getAttributeNS(MY_NS, CUSTOM_OPTIONAL) === "false") {
+                            var connectorVerticalChildId = childId + ELEMENT_POSTFIX_C_VERTICAL;
+                            var connectorVerticalChildSVG = getE(connectorVerticalChildId);
+                            
+                            var y11 = parseInt(connectorVerticalChildSVG.getAttribute("y1"));
+                            var y22 = parseInt(connectorVerticalChildSVG.getAttribute("y2"));
+                            
+                            y11 = y11 - yPosDistance;
+                            y22 = y22 - yPosDistance;
+                            
+                            y11 = y11 + EDGE + 3;
+                            y22 = y22 + EDGE + 3;
+                            
+                            connectorVerticalChildSVG.setAttributeNS(null, "y1", y11);
+                            connectorVerticalChildSVG.setAttributeNS(null, "y2", y22);
+                        }
+                    }
+                    //-------
+                }
+            }
+            // now tries to move a possible rect with the type indicator
+            if (currentRefIndicatorSVG) {
+                var y = getTransformY(currentRefIndicatorSVG);
+                y = y - yPosDistance + HEIGHT_BETWEEN_SIBLINGS;
+                moveGroup(currentRefIndicator, null, y);
+            }
+            if (isExpanded(currentSVG)) {
+                var childrenSVG = getChildren(currentId);
+                for(var i = 0; i &lt; childrenSVG.length; i++) {
+                    // recursive call
+                    contractAllOtherElements(childrenSVG[i], yPosDistance);
+                }
+            }
+            // recalculate the position for the current element
+            updateParentMaxMinAttibutes(currentId); // updates the position
+        }
+        function expandAndReorderChildElements(containerElementId, connectorId) {
+            // calculates the width of parent of parent elements.
+            var prevParentWidth = calculateWidthParentElement(containerElementId);
+            
+            // calculates width of the parent element 
+            var mainWidthParent = calculateWidthGroupElement(containerElementId);
+            
+            // calculates the total distance based on the initial position
+            var initXPosition = prevParentWidth + mainWidthParent;
+            
+            // moves the parent connector as per parent width. ##-1
+            moveGroup(connectorId, initXPosition, null);
+            
+            // calculates width of the parent connector
+            var mainWidthConn = calculateWidthGroupConnector(connectorId);
+            
+            // new position of children
+            var xPos = initXPosition + mainWidthConn; // done with xPos
+            
+            // starts moving the children based on parent position and order of siblings.
+            var childrenSVG = getChildren(containerElementId);
+            var totalChildren = childrenSVG.length;
+            
+            // calculates the inital y position based on the parent y pos.
+            var yPos = getAttributeValue(containerElementId, CUSTOM_MIN_Y_POSITION);
+            
+            // space between children
+            var heightBetween = HEIGHT_BETWEEN_SIBLINGS;
+            
+            // iterate all children
+            var heightElementTmp = 0;
+            for(var i = 0; i &lt; totalChildren; i++) {
+                currentChild = childrenSVG[i];
+                moveGroup(currentChild, xPos, yPos);
+                
+                // gets the height for the child element.
+                heightElementTmp = currentChild.getBBox().height;
+                
+                // update the y position for each child
+                currentChild.setAttributeNS(MY_NS, CUSTOM_MIN_Y_POSITION, yPos);
+                currentChild.setAttributeNS(MY_NS, CUSTOM_MAX_Y_POSITION, yPos + heightElementTmp);
+                
+                yPos = yPos + heightElementTmp;
+                yPos = yPos + heightBetween;
+            }
+        }
+        function calculateWidthParentElement(currentElementId) {
+            var currentSVG = getE(currentElementId);
+            var parentIdName = currentSVG.getAttributeNS(MY_NS, CUSTOM_PARENT_ELEMENT_ID);
+            var width = 0;
+            
+            if(parentIdName &amp;&amp; parentIdName === "null") {
+                // no parent was found
+                return width;
+            } else {
+                var w1 = calculateWidthGroupElement(parentIdName);
+                var w2 = calculateWidthGroupConnector(parentIdName + ELEMENT_POSTFIX);
+                // recursive call
+                var w3 = calculateWidthParentElement(parentIdName);
+                return w1 + w2 + w3;
+            }
+        }
+        /**
+         * Creates a basic group attribute.
+         */
+        function createBasicGroupAttribute() {
+            var gSGV = document.createElementNS(SVG_NS, "g"); // creates a new "group" that will hold attributes
+            
+            var REC_X = 15;
+            var REC_Y = 0;
+            
+            var rectSGV = document.createElementNS(SVG_NS, "rect"); // creates a new "rect"
+            rectSGV.setAttributeNS(null, "x", REC_X);
+            rectSGV.setAttributeNS(null, "y", REC_Y);
+            rectSGV.setAttributeNS(null, "width", ELEMENT_DEFAULT_WIDTH);
+            rectSGV.setAttributeNS(null, "height", ELEMENT_DEFAULT_HEIGHT);
+            rectSGV.setAttributeNS(null, "class", "button");
+            
+            
+            
+            var expandibleSVG = document.createElementNS(SVG_NS, "use"); // creates a new "use"
+            expandibleSVG.setAttributeNS(null, "x", "20");
+            expandibleSVG.setAttributeNS(null, "y", "5");
+            //expandibleSVG.setAttributeNS(null, "onclick", handlerName);
+            //if (isExpandible) {
+            expandibleSVG.setAttributeNS(X_LINK_NS, "href", "#plus");
+            //} else {
+            //    expandibleSVG.setAttributeNS(X_LINK_NS, "href", "#minus");
+            //}
+            
+            // creates the element name based on the position of the main container.
+            var textSGV = document.createElementNS(SVG_NS, "text"); // creates a new "text"
+            textSGV.setAttributeNS(null, "x", "30");
+            textSGV.setAttributeNS(null, "y", "30");
+            textSGV.setAttributeNS(null, "class", "strong");
+            textSGV.setAttributeNS(null, "pointer-events", "none");
+            textSGV.innerHTML = "attributes";
+            
+            // the connector is placed in the middle of the element
+            var lineSGV = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+            lineSGV.setAttributeNS(null, "x1", INIT_X);
+            lineSGV.setAttributeNS(null, "y1", Math.floor(ELEMENT_DEFAULT_HEIGHT / 2));
+            lineSGV.setAttributeNS(null, "x2", REC_X);
+            lineSGV.setAttributeNS(null, "y2", Math.floor(ELEMENT_DEFAULT_HEIGHT / 2));
+            lineSGV.setAttributeNS(null, "stroke-dasharray", "0,0");
+            
+            // adds all the elements into the group element.
+            gSGV.appendChild(rectSGV);
+            gSGV.appendChild(textSGV);
+            gSGV.appendChild(expandibleSVG);
+            gSGV.appendChild(lineSGV);
+            
+            return gSGV;
+        }
+        /**
+         * Creates a basic group element based on the elementId and determines if this element will be visible or not.
+         */
+        function createBasicGroupElement(elementId, isVisble) {
+            var gSGV = document.createElementNS(SVG_NS, "g"); // creates a new "group" that will hold other elements
+            gSGV.setAttributeNS(null, "id", elementId);
+            gSGV.setAttributeNS(null, "transform", "translate(" + INIT_X + "," + INIT_Y + ")");
+            gSGV.setAttributeNS(null, "display", isVisble ? "" : "none"); 
+            
+            // the following element is the main container for any element.
+            var REC_X = 15;
+            var REC_Y = 0;
+            
+            var rectSGV = document.createElementNS(SVG_NS, "rect"); // creates a new "rect"
+            rectSGV.setAttributeNS(null, "x", REC_X);
+            rectSGV.setAttributeNS(null, "y", REC_Y);
+            rectSGV.setAttributeNS(null, "width", ELEMENT_DEFAULT_WIDTH);
+            rectSGV.setAttributeNS(null, "height", ELEMENT_DEFAULT_HEIGHT);
+            rectSGV.setAttributeNS(null, "stroke-dasharray", "0,0");
+            rectSGV.setAttributeNS(null, "class", "button");
+            rectSGV.setAttributeNS(null, "onclick", "selectCurrentGroup('" + elementId + "', true, true)");
+            rectSGV.setAttributeNS(null, "ondblclick", "alert('sorry, not yet implemented :( ')");
+            
+            // creates the element name based on the position of the main container.
+            var textSGV = document.createElementNS(SVG_NS, "text"); // creates a new "text"
+            textSGV.setAttributeNS(null, "x", REC_X + 10);
+            textSGV.setAttributeNS(null, "y", REC_Y + 13);
+            textSGV.setAttributeNS(null, "class", "strong");
+            textSGV.setAttributeNS(null, "pointer-events", "none");
+            
+            // the following line is the connector attached to the element
+            // the connector is placed in the middle of the element
+            var lineSGV = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+            lineSGV.setAttributeNS(null, "x1", INIT_X);
+            lineSGV.setAttributeNS(null, "y1", Math.floor(ELEMENT_DEFAULT_HEIGHT / 2));
+            lineSGV.setAttributeNS(null, "x2", REC_X);
+            lineSGV.setAttributeNS(null, "y2", Math.floor(ELEMENT_DEFAULT_HEIGHT / 2));
+            lineSGV.setAttributeNS(null, "stroke-dasharray", "0,0");
+            
+            // adds all the elements into the group element.
+            gSGV.appendChild(rectSGV);
+            gSGV.appendChild(textSGV);
+            gSGV.appendChild(lineSGV);
+            
+            return gSGV;
+        }
+        function setExpandibleConnector(elementId, isElement, isExpandible, connectorType) {
+            var parentNode = getE(elementId);
+            var handlerName = 0;
+            var xPos = 0;
+            var yPos = 5;
+            
+            if (isElement === true) {
+                // it's an element
+                handlerName = "showHideChildrenElement('" + elementId + "')";
+                var effectiveRectElementSVG = findElementInGroup(elementId, "rect");
+                var widthBase = Number(effectiveRectElementSVG.getAttribute("width"));
+                
+                xPos = Number(effectiveRectElementSVG.getAttribute("x"));
+                xPos += widthBase;
+                xPos -= 4;
+            } else {
+                // it's a connector
+                handlerName = "showHideChildrenConnector('" + elementId + "')";
+                var leftLineSVG = findElementInGroup(elementId, "line", true);
+                var x1 = Number(leftLineSVG.getAttribute("x1"));
+                var x2 = Number(leftLineSVG.getAttribute("x2"));
+                var widthLeftLine = x2 - x1;
+                
+                var connectorSVG = null;
+                if (connectorType === "1") {
+                    // sequence
+                    connectorSVG = findElementInGroup(elementId, "path", false);
+                } else if (connectorType === "2" || connectorType === "3" ) {
+                    // choice or all
+                    connectorSVG = findElementInGroup(elementId, "path", true);
+                }
+                var widthConnector = connectorSVG.getBBox().width;
+                xPos = widthLeftLine + widthConnector;
+            }
+            var expandibleSVG = document.createElementNS(SVG_NS, "use"); // creates a new "use"
+            expandibleSVG.setAttributeNS(null, "x", xPos - 1);
+            expandibleSVG.setAttributeNS(null, "y", yPos);
+            expandibleSVG.setAttributeNS(null, "onclick", handlerName);
+            if (isExpandible) {
+                expandibleSVG.setAttributeNS(X_LINK_NS, "href", "#plus");
+            } else {
+                expandibleSVG.setAttributeNS(X_LINK_NS, "href", "#minus");
+            }
+            var effectiveLineElementSVG = findElementInGroup(elementId, "line", false);
+            parentNode.insertBefore(expandibleSVG, effectiveLineElementSVG);
+        }
+        function setExpandibleConnector2(elementId, isExpandible) {
+            var parentNode = getE(elementId);
+            
+            var effectiveRectElementSVG = findElementInGroup(elementId, "rect");
+            var effectiveLineElementSVG = findElementInGroup(elementId, "line");
+            var effectiveUseElementSVG = findElementInGroup(elementId, "use");
+            
+            var expandibleSVG = createExpandible(isExpandible, elementId, effectiveRectElementSVG, effectiveUseElementSVG);
+            parentNode.insertBefore(expandibleSVG, effectiveLineElementSVG);
+        }
+        function createBasicGroupConnector(elementId, connectorType) {
+            var gSGV = document.createElementNS(SVG_NS, "g"); // creates a new "group"
+            gSGV.setAttributeNS(null, "id", elementId + ELEMENT_POSTFIX);
+            gSGV.setAttributeNS(null, "transform", "translate(" + INIT_X + "," + INIT_Y + ")");
+            gSGV.setAttributeNS(null, "display", "none"); // initially it's hidden
+            
+            var baseElementSVG = findElementInGroup(elementId, "rect");
+            
+            var xPos = baseElementSVG.getAttribute("x");
+            var yPos = baseElementSVG.getAttribute("y");
+            
+            var leftLineSGV = document.createElementNS(SVG_NS, "line"); // creates a new "line init"
+            leftLineSGV.setAttributeNS(null, "x1", "0");
+            leftLineSGV.setAttributeNS(null, "y1", "10");
+            leftLineSGV.setAttributeNS(null, "x2", "15");
+            leftLineSGV.setAttributeNS(null, "y2", "10");
+            leftLineSGV.setAttributeNS(null, "stroke-dasharray", "0,0");
+            gSGV.appendChild(leftLineSGV);
+            
+            var connectorShadeSVG = document.createElementNS(SVG_NS, "path"); // creates a new "path"
+            connectorShadeSVG.setAttributeNS(null, "d", "M24,4 H49 L54,9 V19, L49,24 H24 L19,19 V9 Z");
+            connectorShadeSVG.setAttributeNS(null, "class", "shade");
+            gSGV.appendChild(connectorShadeSVG);
+            
+            var connectorShapeSVG = document.createElementNS(SVG_NS, "path"); // creates a new "path"
+            connectorShapeSVG.setAttributeNS(null, "d", "M20,0 H45 L50,5 V15, L45,20 H20 L15,15 V5 Z");
+            connectorShapeSVG.setAttributeNS(null, "class", "button");
+            connectorShapeSVG.setAttributeNS(null, "onclick", "selectCurrentGroup('" + (elementId + ELEMENT_POSTFIX) + "', false, true)");
+            gSGV.appendChild(connectorShapeSVG);
+            
+            if (connectorType === "1") { // sequence
+                // creates the inner representation of the connector
+                var connectorLineSVG = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+                connectorLineSVG.setAttributeNS(null, "x1", "20");
+                connectorLineSVG.setAttributeNS(null, "y1", "10");
+                connectorLineSVG.setAttributeNS(null, "x2", "45");
+                connectorLineSVG.setAttributeNS(null, "y2", "10");
+                gSGV.appendChild(connectorLineSVG);
+                
+                // creates multiples rects to represent the sequence
+                createRectCicle(26, 9, gSGV);
+                createRectCicle(32, 9, gSGV);
+                createRectCicle(38, 9, gSGV);
+            } else if (connectorType === "2") { // choice
+                var connectorPath1SVG = document.createElementNS(SVG_NS, "path"); // creates a new "path"
+                connectorPath1SVG.setAttributeNS(null, "d", ELEMENT_PATH_CONN_LEFT);
+                connectorPath1SVG.setAttributeNS(null, "class", "button");
+                gSGV.appendChild(connectorPath1SVG);
+                
+                var connectorPath2SVG = document.createElementNS(SVG_NS, "path"); // creates a new "path"
+                connectorPath2SVG.setAttributeNS(null, "d", ELEMENT_PATH_CONN_RIGHT);
+                connectorPath2SVG.setAttributeNS(null, "class", "button");
+                gSGV.appendChild(connectorPath2SVG);
+                
+                // creates multiples rects to represent the choice
+                createRectCicle(32, 4, gSGV);
+                createRectCicle(32, 9, gSGV);
+                createRectCicle(32, 14, gSGV);
+            } else { // all
+                var connectorPathLeftSVG = document.createElementNS(SVG_NS, "path"); // creates a new "path"
+                connectorPathLeftSVG.setAttributeNS(null, "d", "M30,5 H25 V10 H30 H25 V15 H30 H25 V10 H20 H25 V5 Z");
+                connectorPathLeftSVG.setAttributeNS(null, "class", "button");
+                gSGV.appendChild(connectorPathLeftSVG);
+                
+                var connectorPathRightSVG = document.createElementNS(SVG_NS, "path"); // creates a new "path"
+                connectorPathRightSVG.setAttributeNS(null, "d", ELEMENT_PATH_CONN_RIGHT);
+                connectorPathRightSVG.setAttributeNS(null, "class", "button");
+                gSGV.appendChild(connectorPathRightSVG);
+                
+                // creates multiples rects to represent the all
+                createRectCicle(32, 4, gSGV);
+                createRectCicle(32, 9, gSGV);
+                createRectCicle(32, 14, gSGV);
+            }
+            var rightLineSGV = document.createElementNS(SVG_NS, "line"); // creates a new "line end"
+            rightLineSGV.setAttributeNS(null, "x1", "58");
+            rightLineSGV.setAttributeNS(null, "y1", "10");
+            rightLineSGV.setAttributeNS(null, "x2", "70");
+            rightLineSGV.setAttributeNS(null, "y2", "10");
+            rightLineSGV.setAttributeNS(null, "stroke-dasharray", "0,0");
+            gSGV.appendChild(rightLineSGV);
+            
+            return gSGV;
+        }
+        /**
+         * This function creates a 'rect' element simulating this is an circle.
+         * @param xPos Initial x position.
+         * @param yPos Initial y position.
+         * @param parentSVG The parent where this new element will be added to.
+         */
+        function createRectCicle(xPos, yPos, parentSVG) {
+            var connectorRectSVG = document.createElementNS(SVG_NS, "rect"); // creates a new "rect"
+            connectorRectSVG.setAttributeNS(null, "x", xPos);
+            connectorRectSVG.setAttributeNS(null, "y", yPos);
+            connectorRectSVG.setAttributeNS(null, "width", "1");
+            connectorRectSVG.setAttributeNS(null, "height", "2");
+            connectorRectSVG.setAttributeNS(null, "style", "stroke-width:1;stroke:rgb(0,0,0)");
+            parentSVG.appendChild(connectorRectSVG);
+        }
+        /**
+         * This function creates a 'use' element that represents either a '+' or '-' expandible rectangle.
+         * @param isExpandible If this parameter is true, then it creates a '+' box, otherwise a '-' box.
+         * @param containerElementId The unique identifier for the element.
+         * @baseRectElementSVG Based on this element, the 'use' will be created, it's null when 'baseUseElementSVG' exists.
+         * @baseUseElementSVG Based on this element, the 'use' will be created, it's null when 'baseRectElementSVG' exists.
+         */
+        function createExpandible(isExpandible, containerElementId, baseRectElementSVG, baseUseElementSVG) {
+            var dynaObj = null;
+            var handlerName = null;
+            
+            if (baseRectElementSVG) {
+                var xPos = baseRectElementSVG.getAttribute("x");
+                var yPos = baseRectElementSVG.getAttribute("y");
+                
+                var widthBase = baseRectElementSVG.getAttribute("width");
+                xPos = parseInt(widthBase) + parseInt(xPos);
+                xPos -= 5;
+                
+                var heightBase = baseRectElementSVG.getAttribute("height");
+                yPos = parseInt(heightBase) + parseInt(yPos);
+                yPos -= 16;
+                
+                handlerName = "showHideChildrenElement('" + containerElementId + "')";
+            } else {
+                var xPos = baseUseElementSVG.getAttribute("x");
+                var yPos = baseUseElementSVG.getAttribute("y");
+                
+                xPos = parseInt(xPos);
+                xPos += 34;
+                
+                yPos = parseInt(yPos);
+                yPos += 6;
+                
+                handlerName = "showHideChildrenConnector('" + containerElementId + "')";
+            }
+            dynaObj = document.createElementNS(SVG_NS, "use"); // creates a new "use"    
+            dynaObj.setAttributeNS(null, "x", xPos);
+            dynaObj.setAttributeNS(null, "y", yPos);
+            dynaObj.setAttributeNS(null, "onclick", handlerName);
+            
+            if (isExpandible) {
+                dynaObj.setAttributeNS(X_LINK_NS, "href", "#plus");
+            } else {
+                dynaObj.setAttributeNS(X_LINK_NS, "href", "#minus");
+            }
+            
+            return dynaObj;
+        }
+        function cloneBasicObject(originalObjectSVG) {
+            var tagName = originalObjectSVG.tagName;
+            var dynaObj = document.createElementNS(SVG_NS, tagName); // creates a new "obj"
+
+            dynaObj.setAttributeNS(null, "x", originalObjectSVG.getAttribute("x"));
+            dynaObj.setAttributeNS(null, "y", originalObjectSVG.getAttribute("y"));
+            dynaObj.setAttributeNS(null, "width", originalObjectSVG.getAttribute("width"));
+            dynaObj.setAttributeNS(null, "height", originalObjectSVG.getAttribute("height"));
+            
+            return dynaObj;
+        }
+        function addShade(elementId) {
+            var originalObjectSVG = getE(elementId).children[0];
+            
+            var dynaObj = cloneBasicObject(originalObjectSVG);
+            
+            var newX = parseInt(originalObjectSVG.getAttribute("x")) + 3;
+            var newY = parseInt(originalObjectSVG.getAttribute("y")) + 3;
+            
+            dynaObj.setAttributeNS(null, "x", newX);
+            dynaObj.setAttributeNS(null, "y", newY);
+            dynaObj.setAttributeNS(null, "class", "shade");
+            
+            var parentNode = getE(elementId);
+            
+            parentNode.insertBefore(dynaObj, parentNode.childNodes[0]);
+        }
+        /**
+         * This function sets an cross when min and max = 0.
+         * @param elementId This is el id of the element that we want to set the text.
+         * @param minOccurs Min occurences.
+         * @param maxOccurs Max occurences.
+         */
+        function addInvalidElement(elementId, minOccurs, maxOccurs) {
+            if (typeof minOccurs != 'undefined' &amp;&amp; typeof maxOccurs != 'undefined') {
+                if (minOccurs &amp;&amp; maxOccurs) {
+                    var intMinOccurs = parseInt(minOccurs);
+                    var intMaxOccurs = parseInt(maxOccurs);
+                    
+                    if(!(isNaN(intMaxOccurs) &amp;&amp; isNaN(intMaxOccurs))) {
+                        if ((intMinOccurs === 0 &amp;&amp; intMaxOccurs === 0) || (intMinOccurs &gt; intMaxOccurs)) {
+                            var mainRecSVG = findElementInGroup(elementId, "rect", false);
+                            // upper left side
+                            var x00 = Number(mainRecSVG.getAttribute("x"));
+                            var y00 = Number(mainRecSVG.getAttribute("y"));
+                            // upper right side
+                            var x10 = Number(mainRecSVG.getAttribute("x")) + Number(mainRecSVG.getAttribute("width"));
+                            var y10 = Number(mainRecSVG.getAttribute("y"));
+                            // bottom left side
+                            var x01 = Number(mainRecSVG.getAttribute("x"));
+                            var y01 = Number(mainRecSVG.getAttribute("y")) + Number(mainRecSVG.getAttribute("height"));
+                            // bottom right side
+                            var x11 = Number(mainRecSVG.getAttribute("x")) + Number(mainRecSVG.getAttribute("width"));
+                            var y11 = Number(mainRecSVG.getAttribute("y")) + Number(mainRecSVG.getAttribute("height"));
+                            
+                            // creates a crossed line
+                            var gSGV = getE(elementId);
+                            
+                            var lineSGV1 = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+                            lineSGV1.setAttributeNS(null, "x1", x00);
+                            lineSGV1.setAttributeNS(null, "y1", y00);
+                            lineSGV1.setAttributeNS(null, "x2", x11);
+                            lineSGV1.setAttributeNS(null, "y2", y11);
+                            
+                            var lineSGV2 = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+                            lineSGV2.setAttributeNS(null, "x1", x01);
+                            lineSGV2.setAttributeNS(null, "y1", y01);
+                            lineSGV2.setAttributeNS(null, "x2", x10);
+                            lineSGV2.setAttributeNS(null, "y2", y10);
+                            
+                            gSGV.appendChild(lineSGV1); //adds to the document
+                            gSGV.appendChild(lineSGV2); //adds to the document
+                        }
+                    }
+                }
+            }
+        }
+        /**
+         * This function sets the connector cardinality to the corresponding element.
+         * @param elementId This is el id of the element that we want to set the text.
+         * @param maxOccurs Max occurences.
+         */
+        function addCardinalityConnector(elementId, maxOccurs) {
+            if (typeof maxOccurs != 'undefined') {
+                if (maxOccurs) {
+                    var intMaxOccurs = parseInt(maxOccurs);
+                    if (intMaxOccurs &gt;= 2 || maxOccurs === 'unbounded') {
+                        var gSGV = getE(elementId);
+                        
+                        var mainRecSVG = findElementInGroup(elementId, "rect", false);
+                        var shadeRecSVG = findElementInGroup(elementId, "rect", true);
+                        var middleRecSVG = gSGV.childNodes[1];
+                        
+                        var initX = Number(mainRecSVG.getAttribute("x")) + Number(mainRecSVG.getAttribute("width")) - 12;
+                        var initY = Number(mainRecSVG.getAttribute("y")) + Number(mainRecSVG.getAttribute("height"));
+                        
+                        var middleX = Number(shadeRecSVG.getAttribute("x")) + Number(shadeRecSVG.getAttribute("width")) - 12;
+                        var middleY = Number(shadeRecSVG.getAttribute("y")) + Number(shadeRecSVG.getAttribute("height"));
+                        
+                        var endX = Number(middleRecSVG.getAttribute("x")) + Number(middleRecSVG.getAttribute("width")) - 6;
+                        var endY = Number(middleRecSVG.getAttribute("y")) + Number(middleRecSVG.getAttribute("height"));
+                        
+                        var pathSVG = document.createElementNS(SVG_NS, "path"); // creates a new "path"
+                        
+                        pathSVG.setAttributeNS(null, "d", "M" + initX + "," + initY + " L" + middleX + "," + middleY + " L" + endX + "," + endY + " L" + middleX + "," + middleY + " L" + initX + "," + initY + " Z");
+                        pathSVG.setAttributeNS(null, "class", "button");
+                    
+                        gSGV.appendChild(pathSVG);
+                    }
+                }
+            }
+        }
+        /**
+         * This function sets the leaf indicator in the element.
+         * @param connectorType The type of connector for this element.
+         */
+        function addLeafIndicator(elementId, connectorType) {
+            var isLeaf = true;
+            if (typeof connectorType != 'undefined') {
+                if (connectorType) {
+                    isLeaf = false;
+                }
+            }
+            if (isLeaf === true) {
+                var objectSVG = getE(elementId);
+                
+                // finds the main element for this group
+                var mainRecSVG = findElementInGroup(elementId, "rect", false);
+                var xPos = Number(mainRecSVG.getAttribute("x"));
+                var yPos = Number(mainRecSVG.getAttribute("y"));
+                
+                var line1SGV = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+                line1SGV.setAttributeNS(null, "x1", xPos + 1);
+                line1SGV.setAttributeNS(null, "y1", yPos + 2);
+                line1SGV.setAttributeNS(null, "x2", xPos + 7);
+                line1SGV.setAttributeNS(null, "y2", yPos + 2);
+                objectSVG.appendChild(line1SGV); //adds to the group
+                
+                var line2SGV = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+                line2SGV.setAttributeNS(null, "x1", xPos + 1);
+                line2SGV.setAttributeNS(null, "y1", yPos + 4);
+                line2SGV.setAttributeNS(null, "x2", xPos + 6);
+                line2SGV.setAttributeNS(null, "y2", yPos + 4);
+                objectSVG.appendChild(line2SGV); //adds to the group
+                
+                var line3SGV = document.createElementNS(SVG_NS, "line"); // creates a new "line"
+                line3SGV.setAttributeNS(null, "x1", xPos + 1);
+                line3SGV.setAttributeNS(null, "y1", yPos + 6);
+                line3SGV.setAttributeNS(null, "x2", xPos + 6);
+                line3SGV.setAttributeNS(null, "y2", yPos + 6);
+                objectSVG.appendChild(line3SGV); //adds to the group
+            }
+            return isLeaf;
+        }
+        /**
+         * This function sets the comments to the corresponding element.
+         * @param comments The comments added into the element.
+         */
+        function addDocumentation(elementId, comments) {
+            var documentation = false;
+            if (typeof comments != 'undefined') {
+                if (comments) {
+                    var objectSVG = getE(elementId);
+                    
+                    // finds the shade element for this group
+                    var shadeRecSVG = findElementInGroup(elementId, "rect", true);
+                    var shadeXPos = shadeRecSVG.getAttribute("x");
+                    var shadeYPos = shadeRecSVG.getAttribute("y");
+                    var shadeHeightPos = shadeRecSVG.getAttribute("height");
+                    
+                    // finds the main element for this group
+                    var mainRecSVG = findElementInGroup(elementId, "rect", false);
+                    var mainWidthPos = Number(mainRecSVG.getAttribute("width"));
+                    if (mainWidthPos &lt; MAX_WIDTH_COMMENTS) {
+                        mainWidthPos = MAX_WIDTH_COMMENTS;
+                    }
+                    var yPos = 0;
+                    if (objectSVG.getAttributeNS(MY_NS, CUSTOM_CARD_TEXT) === "true") {
+                        // cardinality was added
+                        // finds the cardinality text
+                        var cardinalityTextSVG = findElementInGroup(elementId, "text", false);
+                        var textHeight = cardinalityTextSVG.getBBox().height;
+                        
+                        yPos = Number(shadeYPos) + Number(shadeHeightPos) + textHeight + HEIGHT_BETWEEN_TEXT;
+                    } else {
+                        // no cardinality was added
+                        yPos = Number(shadeYPos) + Number(shadeHeightPos) + HEIGHT_BETWEEN_TEXT;
+                    }
+                    var xPos = Number(shadeXPos);
+                    
+                    var gSGV = getE(elementId);
+                    // creates the element name based on the position of the main container.
+                    var textSVG = document.createElementNS(SVG_NS, "text"); // creates a new "text"
+                    textSVG.setAttributeNS(null, "y", yPos);
+                    textSVG.setAttributeNS(null, "pointer-events", "none");
+                    textSVG.setAttributeNS(null, "class", "text-comment");
+                    
+                    var tspanSVG = document.createElementNS(SVG_NS, "tspan"); // creates a new "tspan"
+                    tspanSVG.setAttributeNS(null, "x", xPos);
+                    tspanSVG.setAttributeNS(null, "dy", "2");
+                    textSVG.appendChild(tspanSVG);
+                    tspanSVG.innerHTML = "";
+                    gSGV.appendChild(textSVG);
+                    
+                    // ======= adjust the text as paragraph
+                    var commentTextSVG = findElementInGroup(elementId, "text", false);
+                    var currentTSpanSVG = commentTextSVG.childNodes[0];
+                    
+                    var textArr = comments.split(" ");
+                    for(var i = 0; i &lt; textArr.length; i++) {
+                        currentTSpanSVG.innerHTML = currentTSpanSVG.innerHTML + textArr[i];
+                        currentTSpanSVG.innerHTML = currentTSpanSVG.innerHTML + " ";
+                        
+                        if (currentTSpanSVG.getComputedTextLength() &gt; (mainWidthPos - 10)) {
+                            var myTspanSVG = document.createElementNS(SVG_NS, "tspan"); // creates a new "tspan"
+                            myTspanSVG.setAttributeNS(null, "x", xPos);
+                            myTspanSVG.setAttributeNS(null, "dy", "10");
+                            textSVG.appendChild(myTspanSVG);
+                            
+                            currentTSpanSVG = myTspanSVG;
+                        }
+                    }
+                    documentation = true;
+                }
+            }
+            return documentation;
+        }
+        /**
+         * This function sets the text cardinality to the corresponding element.
+         * @param elementId This is el id of the element that we want to set the text.
+         * @param minOccurs Min occurences.
+         * @param maxOccurs Max occurences.
+         */
+        function addCardinalityText(elementId, minOccurs, maxOccurs) {
+            var cardinalityAdded = false;
+            
+            if (typeof minOccurs != 'undefined' &amp;&amp; typeof maxOccurs != 'undefined') {
+                if (minOccurs &amp;&amp; maxOccurs) {
+                    var intMinOccurs = parseInt(minOccurs);
+                    var intMaxOccurs = parseInt(maxOccurs);
+                    var cardinalityText = "";
+                    
+                    if (intMinOccurs === 0 &amp;&amp; intMaxOccurs === 1) {
+                        return cardinalityAdded; // no text is needed
+                    }
+                    cardinalityText = minOccurs + ".." + maxOccurs;
+                    if(isNaN(intMaxOccurs) &amp;&amp; maxOccurs === "unbounded") {
+                        maxOccurs = "∞";
+                        cardinalityText = minOccurs + ".." + maxOccurs;
+                    } else if (intMaxOccurs &lt; intMinOccurs) {
+                        return cardinalityAdded; // no text is needed
+                    } else if (intMaxOccurs === intMinOccurs) {
+                        if (intMinOccurs === 0 || intMinOccurs === 1) {
+                            return cardinalityAdded; // no text is needed
+                        } else {
+                            minOccurs = "";
+                            cardinalityText = maxOccurs;
+                        }
+                    }
+                    
+                    // finds the shade element for this group
+                    var shadeRecSVG = findElementInGroup(elementId, "rect", true);
+                    var shadeXPos = shadeRecSVG.getAttribute("x");
+                    var shadeYPos = shadeRecSVG.getAttribute("y");
+                    var shadeWidthPos = shadeRecSVG.getAttribute("width");
+                    var shadeHeightPos = shadeRecSVG.getAttribute("height");
+                    
+                    var yPos = Number(shadeYPos) + Number(shadeHeightPos) + HEIGHT_BETWEEN_TEXT;
+                    var xPos = Number(shadeXPos);
+                    
+                    var gSGV = getE(elementId);
+                    // creates the element name based on the position of the main container.
+                    var textSVG = document.createElementNS(SVG_NS, "text"); // creates a new "text"
+                    textSVG.setAttributeNS(null, "x", xPos);
+                    textSVG.setAttributeNS(null, "y", yPos);
+                    textSVG.setAttributeNS(null, "pointer-events", "none");
+                    textSVG.innerHTML = cardinalityText;
+                    
+                    gSGV.appendChild(textSVG);
+                    
+                    // reacomodate the text
+                    var textSVG = findElementInGroup(elementId, "text", false);
+                    var widthText = textSVG.getBBox().width;
+                    
+                    var currentX = xPos + (shadeWidthPos - widthText - 10);
+                    // adjust the position
+                    textSVG.setAttribute("x", currentX);
+                    
+                    cardinalityAdded = true;
+                }
+            }
+            return cardinalityAdded;
+        }
+        function addCardinalityMultiple(elementId, maxOccurs) {
+            if (typeof maxOccurs != 'undefined') {
+                if (maxOccurs) {
+                    var intMaxOccurs = parseInt(maxOccurs);
+                    if (intMaxOccurs &gt;= 2 || maxOccurs === "unbounded") {
+                        var originalObjectSVG = getE(elementId).children[0];
+                        var dynaObj = cloneBasicObject(originalObjectSVG);
+                        
+                        var newX = parseInt(originalObjectSVG.getAttribute("x")) + 3;
+                        var newY = parseInt(originalObjectSVG.getAttribute("y")) + 3;
+                        
+                        dynaObj.setAttributeNS(null, "x", newX);
+                        dynaObj.setAttributeNS(null, "y", newY);
+                        dynaObj.setAttributeNS(null, "stroke-dasharray", originalObjectSVG.getAttribute("stroke-dasharray"));
+                        dynaObj.setAttributeNS(null, "class", originalObjectSVG.getAttribute("class"));
+                        
+                        var parentNode = getE(elementId);
+                        parentNode.insertBefore(dynaObj, parentNode.childNodes[0]);
+                    }
+                }
+            }
+        }
+        
+        function setStrokeDash(elementId, optional) {
+            // rectangle container
+            var rectSVG = getE(elementId).children[0];
+            // connector
+            var initConnectorSVG = getE(elementId).children[2];
+
+            var value = "";
+            if (optional) {
+                value = "3,3";
+            } else {
+                value = "0,0";
+            }
+            rectSVG.setAttribute("stroke-dasharray", value);
+            initConnectorSVG.setAttribute("stroke-dasharray", value);
+        }
+        /**
+         * This function sets the text to the corresponding element.
+         * @param elementId This is el id of the element that we want to set the text.
+         * @param text The actual text.
+         */
+        function setText(elementId, text) {
+            // rectangle container
+            var rectSVG = getE(elementId).children[0];
+            // text
+            var textSVG = getE(elementId).children[1];
+
+            textSVG.innerHTML = text;
+            var widthText = textSVG.getBBox().width;
+
+            var currentWidth = rectSVG.getAttribute("width");
+            currentWidth = parseInt(currentWidth) + widthText;
+            // adjust 
+            rectSVG.setAttribute("width", currentWidth);
+        }
+        /**
+         * This function finds an inner element located under another svg element.
+         * The desired element must be present as part of its children.
+         * @param groupId This is el id of the element that could have children that we want to find.
+         * @param tagName This element tag name must be the one that we are looking for.
+         * @param firstOccurence If this parameter was set to 'true', then only the first maches will be returned, 
+         *            otherwise, it will return the last occurence.
+         */
+        function findElementInGroup(groupId, tagName, firstOccurence) {
+            var parentNode = getE(groupId);
+            var childrenSVG = parentNode.childNodes;
+            
+            var elementFoundSVG = null;
+            for(var i = 0; i &lt; childrenSVG.length; i++) {
+                if(childrenSVG[i].tagName === tagName) {
+                    elementFoundSVG = childrenSVG[i];
+                    if (firstOccurence) {
+                        break;
+                    }
+                }
+             }
+             return elementFoundSVG;
+        }
+        function getChildren(parentElementId) {
+            var childrenSVG = [];
+            //gets the children for this parent element.
+            var allGroupsSVG = document.getElementsByTagName("g");
+            for(var i = 0; i &lt; allGroupsSVG.length; i++) {
+                if(allGroupsSVG[i].getAttributeNS(MY_NS, CUSTOM_PARENT_ELEMENT_ID) === parentElementId) {
+                    childrenSVG.push(allGroupsSVG[i]);
+                }
+            }
+            return childrenSVG;
+        }
+        function getParent(containerElementId) {
+            var currentSVG = getE(containerElementId);
+            var parentId = currentSVG.getAttributeNS(MY_NS, CUSTOM_PARENT_ELEMENT_ID);
+            
+            if(parentId &amp;&amp; parentId === "null") {
+                return null;
+            } else {
+                return getE(parentId);
+            }
+        }
+        function getSiblings(parentElementId) {
+            // it's a sibling as long as the parent is the same
+            var domElementSVG = getE(parentElementId);
+            var parentId = domElementSVG.getAttributeNS(MY_NS, CUSTOM_PARENT_ELEMENT_ID);
+            
+            if(parentId &amp;&amp; parentId === "null") {
+                var siblingsSVG = [];
+                siblingsSVG.push(domElementSVG);
+                return siblingsSVG;
+            } else {
+                var allSiblingsSVG = getChildren(parentId);
+                return allSiblingsSVG;
+            }
+        }
+        function isExpanded(elementSVG) {
+            var connSGV = findElementInGroup(elementSVG.getAttribute("id"), "use");
+            if (connSGV === null) {
+                return false;
+            } else {
+                var attr = connSGV.getAttribute("href");
+                
+                if (attr === "#plus") {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        function getGlobalPosition(elementSVG) {
+            var root = getRoot();
+            var point = root.createSVGPoint();
+            // This is the top-left relative to the SVG element
+            var ctm = elementSVG.getCTM();
+            return point.matrixTransform(ctm);
+            //This is the top-left relative to the document
+            //var ctm = elementSVG.getScreenCTM();
+            //return point.matrixTransform(ctm);
+        }
+        function getTransformX(elementSVGOrId) {
+            var domElementSVG = getE(elementSVGOrId);
+            if (!domElementSVG) {
+                domElementSVG = elementSVGOrId;
+            }
+            var xforms = domElementSVG.getAttribute('transform');
+            var parts  = /translate\(\s*([^\s,)]+)[ ,]([^\s,)]+)/.exec(xforms);
+            return Number(parts[1]);
+        }
+        function getTransformY(elementSVGOrId) {
+            var domElementSVG = getE(elementSVGOrId);
+            if (!domElementSVG) {
+                domElementSVG = elementSVGOrId;
+            }
+            var xforms = domElementSVG.getAttribute('transform');
+            var parts  = /translate\(\s*([^\s,)]+)[ ,]([^\s,)]+)/.exec(xforms);
+            return Number(parts[2]);
+        }
+        function getAttributeValue(elementId, attributeName) {
+            var domElementSVG = getE(elementId);
+            return Number(domElementSVG.getAttributeNS(MY_NS, attributeName));
+        }
+        function moveGroup(idStr, xOffset, yOffset) {
+            var domElementSVG = getE(idStr);
+            if (!domElementSVG) {
+                domElementSVG = idStr;
+            }
+            if (xOffset === null) {
+                xOffset = getTransformX(domElementSVG);
+            }
+            if (yOffset === null) {
+                yOffset = getTransformY(domElementSVG);
+            }
+            domElementSVG.setAttributeNS(null, "transform", "translate(" + xOffset + "," + yOffset + ")");
+        }
+        function calculateHeightGroupElement(idGroupElement) {
+            return getE(idGroupElement).getBBox().height;
+        }
+        function calculateWidthGroupElement(idGroupElement) {
+            return getE(idGroupElement).getBBox().width;
+        }
+        /*
+        function calculateWidthGroupElement(idGroupElement) {
+            var elementSGV = findElementInGroup(idGroupElement, "rect");
+            var initConnectorSGV = findElementInGroup(idGroupElement, "line");
+            
+            var elementWidth = parseInt(elementSGV.getAttribute("width"));
+            var initConnectorWidth = parseInt(initConnectorSGV.getAttribute("x2")) - parseInt(initConnectorSGV.getAttribute("x1"));
+            var mainWidth = initConnectorWidth + elementWidth;
+            mainWidth += 3; // this value belongs to the plus/minus width element.
+            
+            return mainWidth;
+        }
+        */
+        function calculateWidthGroupConnector(idGroupConnector) {
+            return getE(idGroupConnector).getBBox().width;
+        }
+        /*
+        function calculateWidthGroupConnector(idGroupConnector) {
+            var connSGV = findElementInGroup(idGroupConnector, "use", true);
+            var initConnSGV = findElementInGroup(idGroupConnector, "line", true);
+            var lastConnSGV = findElementInGroup(idGroupConnector, "line");
+            
+            var connWidth = connSGV.getBBox().width;
+            var initConnWidth = Number(initConnSGV.getAttribute("x2")) - Number(initConnSGV.getAttribute("x1"));
+            var lastConnWidth = Number(lastConnSGV.getAttribute("x2")) - Number(lastConnSGV.getAttribute("x1"));
+            var mainWidthConn = connWidth + initConnWidth + lastConnWidth;
+            mainWidthConn += 5; // this value belongs to the connector width element.
+            
+            return mainWidthConn;
+        }
+        */
+        /**
+         * Changes the state of the icon, it can be either '+' or '-'
+         */
+        function toggleExpandible(containerElementId, forcePlusConnector) {
+            var plusConnector = false;
+            var parentNode = getE(containerElementId);
+            var childrenSVG = parentNode.childNodes;
+            var pos = containerElementId.indexOf(ELEMENT_POSTFIX);
+            
+            var effectiveElementSVG = null;
+            var attr = null;
+            // determines if the containerId is either an element or connector based on the name.
+            if (pos === -1) {
+                // it's an element
+                effectiveElementSVG = findElementInGroup(containerElementId, "use", true);
+            } else {
+                // it's a connector
+                effectiveElementSVG = findElementInGroup(containerElementId, "use", false);
+            }
+            if (effectiveElementSVG !== null) {
+                // changes the box icon
+                if (typeof forcePlusConnector != 'undefined') {
+                    if (forcePlusConnector === true) {
+                        effectiveElementSVG.setAttributeNS(X_LINK_NS, "href", "#plus");
+                    } else {
+                        effectiveElementSVG.setAttributeNS(X_LINK_NS, "href", "#minus");
+                    }
+                    plusConnector = forcePlusConnector;
+                } else {
+                    attr = effectiveElementSVG.getAttribute("href");
+                    if (attr === "#plus") {
+                        effectiveElementSVG.setAttributeNS(X_LINK_NS, "href", "#minus");
+                        plusConnector = false;
+                    } else {
+                        effectiveElementSVG.setAttributeNS(X_LINK_NS, "href", "#plus");
+                        plusConnector = true;
+                    }
+                }
+            }
+            return plusConnector;
+        }
+        function copyElements(sourceMap, targetMap) {
+            for (var key in sourceMap) {
+                targetMap[key] = sourceMap[key];
+            }
+        }
+        /**
+         * This function gets the root element for this document, usually the root element is the svg element.
+         */
+        function getRoot() {
+            return getE("root"); //Get svg element
+        }
+        /**
+         * This function is just a short version of the usual document.getElementById().
+         */
+        function getE(elementId) {
+            return document.getElementById(elementId); //Gets the element
+        }
+        /**
+         * This function determines if the element is optional or mandatory based on the minOccurs.
+         */
+        function isOptional(minOccurs) {
+            var optional = false;
+            
+            if (typeof minOccurs != 'undefined') {
+                if (minOccurs) {
+                    var intMinOccurs = parseInt(minOccurs);
+                    if (intMinOccurs &lt;= 0) {
+                        optional = true;
+                    }
+                }
+            }
+            return optional;
+        }
+        /**
+         * This function determines if the element has cardinality multiple of not.
+         */
+        function isCardinalityMultiple(elementSVG) {
+            var childrenSVG = elementSVG.childNodes;
+            
+            var totalRecs = 0;
+            for(var i = 0; i &lt; childrenSVG.length; i++) {
+                if (childrenSVG[i].tagName === "rect") {
+                    totalRecs++;
+                }
+            }
+            if (totalRecs === 2) {
+                // only found the element and the shade only
+                return false;
+            } else {
+                return true;
+            }
+        }
+        
+        /**
+         * Test whether a child element is within a complex type, if so, returns true, otherwise false.
+         */
+        function isChildComplexTypeRef(elementSVG) {
+            var complex = false;
+            var myParentSVG = getParent(elementSVG.getAttribute("id"));
+            if (myParentSVG != null) {
+                var typeRefDescription = myParentSVG.getAttributeNS(MY_NS, CUSTOM_REF_TYPE);
+                if (typeRefDescription !== null) {
+                    complex = true;
+                } else {
+                    // recursive call to ask the other parents
+                    complex = isChildComplexTypeRef(myParentSVG);
+                }
+            }
+            return complex;
+        }
+    </script>
+    <defs>
+        <style type='text/css'><![CDATA[
+            text {
+                font-family: arial;
+                font-size: 10px;
+            }
+            line, polyline, polygon {
+                fill: none;
+                stroke: black;
+            }
+            .strong {
+                font-size: 11px;
+                font-weight: bold;
+            }
+            .button {
+                fill: white;
+                stroke: black;
+                pointer-events: all
+            }
+            .complex-type {
+                fill: #ffffc0;
+                stroke: #808080;
+            }
+            .button-pressed {
+                fill: #a6caf0;
+                stroke: black;
+                pointer-events: all
+            }
+            .shade {
+                fill: #cbc9c6;
+                stroke: #cbc9c6;
+            }
+            .text-comment {
+                font-family: arial;
+                font-size: 9px;
+                fill: #808080;
+            }
+            .text-type {
+                font-size: 11px;
+                font-weight: bold;
+                font-family: arial;
+                fill: #808080;
+            }
+            svg {
+                width: "100%";
+                height: "100%";
+                background: white;
+            }
+            ]]></style>
+
+        <symbol class='button' id='plus'>
+            <rect x='1' y='1' width='8' height='8' />
+            <line x1='2' y1='5' x2='8' y2='5' />
+            <line x1='5' y1='2' x2='5' y2='8' />
+        </symbol>
+        <symbol class='button' id='minus'>
+            <rect x='1' y='1' width='8' height='8' />
+            <line x1='2' y1='5' x2='8' y2='5' />
+        </symbol>
+    </defs>
+</svg>
